@@ -458,3 +458,213 @@
     }
   }
 ];
+        // ===== STATE =====
+    const cart = [];
+    let currentPage = ''; // '', '/product/:id', '/cart'
+
+    // ===== ROUTING =====
+    function navigateTo(path) {
+      window.history.pushState(null, '', path);
+      render();
+    }
+
+    function getPath() {
+      return window.location.pathname;
+    }
+
+    // ===== HELPERS =====
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cart-badge');
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    // ===== RENDER FUNCTIONS =====
+    function render() {
+      const path = getPath();
+      const content = document.getElementById('page-content');
+
+      // Определить страницу
+      if (path === '/cart') {
+        renderCartPage(content);
+      } else if (path.startsWith('/product/')) {
+        const id = parseInt(path.split('/').pop(), 10);
+        const product = PRODUCTS.find(p => p.id === id);
+        if (product) {
+          renderProductDetail(content, product);
+        } else {
+          content.innerHTML = '<div style="padding:2rem;text-align:center">Товар не найден</div>';
+        }
+      } else {
+        // Главная страница (каталог)
+        renderCatalogPage(content);
+      }
+
+      updateCartBadge();
+    }
+
+    function renderCatalogPage(container) {
+      container.innerHTML = `
+        <div class="filters">
+          <button class="filter-btn active" onclick="setFilter('all')">Все</button>
+          <button class="filter-btn" onclick="setFilter('laptops')">Ноутбуки</button>
+          <button class="filter-btn" onclick="setFilter('phones')">Смартфоны</button>
+          <button class="filter-btn" onclick="setFilter('tablets')">Планшеты</button>
+          <button class="filter-btn" onclick="setFilter('accessories')">Аксессуары</button>
+        </div>
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Поиск по названию..." oninput="filterProducts()">
+        </div>
+        <div class="products" id="products-grid"></div>
+      `;
+
+      renderProductsGrid(PRODUCTS);
+    }
+
+    let activeFilter = 'all';
+    function setFilter(category) {
+      activeFilter = category;
+      const filtered = category === 'all'
+        ? PRODUCTS
+        : PRODUCTS.filter(p => p.category === category);
+      renderProductsGrid(filtered);
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function filterProducts() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const filtered = PRODUCTS.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.category.includes(query)
+      );
+      renderProductsGrid(filtered);
+    }
+
+    function renderProductsGrid(products) {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = products.map(product => `
+        <a href="/product/${product.id}" class="product-card">
+          <div class="product-img">${product.emoji}</div>
+          <div class="product-info">
+            <div class="product-name">${product.name}</div>
+            <div class="product-category">${product.category}</div>
+            <div class="product-price">${product.price.toLocaleString()} ₽</div>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    function renderProductDetail(container, product) {
+      container.innerHTML = `
+        <a href="/" class="back-link">← Назад в каталог</a>
+        <div class="product-detail-container">
+          <div class="product-detail-img">${product.emoji}</div>
+          <h1 class="product-detail-name">${product.name}</h1>
+          <div class="product-detail-category">${product.category}</div>
+          <div class="product-detail-price">${product.price.toLocaleString()} ₽</div>
+          <p class="product-detail-desc">${product.desc}</p>
+          <div class="product-detail-specs">
+            ${Object.entries(product.specs).map(([key, val]) => `
+              <div class="spec-row">
+                <span class="spec-key">${key}</span>
+                <span class="spec-val">${val}</span>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn-primary" onclick="addToCart(${product.id})">В корзину</button>
+        </div>
+      `;
+    }
+
+    function renderCartPage(container) {
+      const total = cart.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="cart-container">
+            <div class="empty-cart">
+              <div class="empty-cart-emoji">🛒</div>
+              <p>Корзина пуста</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="cart-container">
+          <div class="cart-header">
+            <h2>Корзина</h2>
+            <span>Товары: ${cart.reduce((s, i) => s + i.qty, 0)} шт.</span>
+          </div>
+          <div class="cart-items">
+            ${cart.map((item, idx) => `
+              <div class="cart-item">
+                <div class="cart-item-img">${item.product.emoji}</div>
+                <div class="cart-item-info">
+                  <div class="cart-item-name">${item.product.name}</div>
+                  <div class="cart-item-price">${item.product.price.toLocaleString()} ₽ × ${item.qty}</div>
+                </div>
+                <div class="qty-controls">
+                  <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+                  <span class="qty-value">${item.qty}</span>
+                  <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+                  <button class="remove-btn" onclick="removeFromCart(${idx})">✕</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="cart-footer">
+            <div class="cart-total-row">Итого: ${total.toLocaleString()} ₽</div>
+            <button class="btn-primary">Оформить заказ (не работает)</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // ===== CART LOGIC =====
+    function addToCart(id) {
+      const product = PRODUCTS.find(p => p.id === id);
+      const existing = cart.find(item => item.product.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ product, qty: 1 });
+      }
+      showToast('Товар добавлен в корзину');
+      render();
+    }
+
+    function changeQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        removeFromCart(index);
+      } else {
+        render();
+      }
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      render();
+    }
+
+    // ===== INITIALIZE =====
+    window.addEventListener('popstate', render);
+    render();
+  </script>
+ </body>
+</html>
