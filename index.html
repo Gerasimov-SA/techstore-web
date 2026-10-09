@@ -322,9 +322,9 @@
   <header>
     <div class="logo" onclick="navigateTo('/')">TechStore</div>
     <div class="header-actions">
-      <a href="/cart" class="cart-btn">
-        🛒 Корзина <span class="cart-badge" id="cart-badge" style="display:none">0</span>
-      </a>
+     <button class="cart-btn" type="button" onclick="navigateTo('/cart')">
+  🛒 Корзина <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+</button>
     </div>
   </header>
 
@@ -569,7 +569,7 @@
 
     function renderProductDetail(container, product) {
       container.innerHTML = `
-        <a href="/" class="back-link">← Назад в каталог</a>
+       <button class="back-link" type="button" onclick="navigateTo('/')">← Назад в каталог</button>
         <div class="product-detail-container">
           <div class="product-detail-img">${product.emoji}</div>
           <h1 class="product-detail-name">${product.name}</h1>
