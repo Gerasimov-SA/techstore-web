@@ -554,18 +554,18 @@
     }
 
     function renderProductsGrid(products) {
-      const grid = document.getElementById('products-grid');
-      grid.innerHTML = products.map(product => `
-        <a href="/product/${product.id}" class="product-card">
-          <div class="product-img">${product.emoji}</div>
-          <div class="product-info">
-            <div class="product-name">${product.name}</div>
-            <div class="product-category">${product.category}</div>
-            <div class="product-price">${product.price.toLocaleString()} ₽</div>
-          </div>
-        </a>
-      `).join('');
-    }
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = products.map(product => `
+    <div class="product-card" onclick="navigateTo('/product/${product.id}')">
+      <div class="product-img">${product.emoji}</div>
+      <div class="product-info">
+        <div class="product-name">${product.name}</div>
+        <div class="product-category">${product.category}</div>
+        <div class="product-price">${product.price.toLocaleString()} ₽</div>
+      </div>
+    </div>
+  `).join('');
+}
 
     function renderProductDetail(container, product) {
       container.innerHTML = `
