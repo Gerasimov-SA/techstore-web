@@ -1,4 +1,4 @@
-// cart.js
+
 function renderCart() {
   const cart = getCart(); // из data.js
   const cartItemsContainer = document.getElementById('cart-items');
