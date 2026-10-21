@@ -14,7 +14,6 @@ function getCart() {
   const stored = localStorage.getItem('techstore-cart');
   return stored ? JSON.parse(stored) : [];
 }
-
 // Сохраняем корзину
 function saveCart(cart) {
   localStorage.setItem('techstore-cart', JSON.stringify(cart));
