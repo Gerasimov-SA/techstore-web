@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Товар — TechStore</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: var(--card-bg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .cart-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .cart-btn:hover { background: var(--primary-dark); }
+    .cart-badge {
+      background: #dc2626;
+      color: white;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .back-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .product-detail-container {
+      max-width: 600px;
+      margin: 1rem auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .product-detail-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    .product-detail-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .product-detail-category {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .product-detail-price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    .product-detail-desc {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #475569;
+      margin-bottom: 1.5rem;
+    }
+    .product-detail-specs {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-key { color: var(--muted); }
+    .spec-val { font-weight: 500; }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.9rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">TechStore</a>
+    <div class="header-actions">
+      <a href="/cart" class="cart-btn">
+        🛒 Корзина <span class="cart-badge" id="cart-badge">0</span>
+      </a>
+      <a href="/profile" class="cart-btn" style="background:transparent;color:var(--text)">Профиль</a>
+      <a href="/search" class="cart-btn" style="background:transparent;color:var(--text)">Поиск</a>
+    </div>
+  </header>
+
+  <main>
+    <div style="padding: 0 1.25rem;">
+      <button class="back-link" type="button" onclick="history.back()">← Назад в каталог</button>
+    </div>
+
+    <div class="product-detail-container" id="product-content">
+      <!-- Сюда JS подставит данные товара -->
+      <div style="padding:2rem;text-align:center;color:var(--muted)">Загрузка...</div>
+    </div>
+  </main>
+
+  <!-- Подключаем общие данные -->
+  <script src="data.js"></script>
+  <script>
+    // Получаем ID товара из query-параметра ?id=...
+    const params = new URLSearchParams(window.location.search);
+    const productId = parseInt(params.get('id'), 10);
+
+    const container = document.getElementById('product-content');
+    const cartBadge = document.getElementById('cart-badge');
+
+    function updateCartBadge() {
+      const cart = getCart();
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      cartBadge.textContent = count;
+    }
+
+    function renderProduct(product) {
+      if (!product) {
+        container.innerHTML = `
+          <div style="padding:2rem;text-align:center;">
+            <h2>Товар не найден</h2>
+            <a href="/">Вернуться в каталог</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="product-detail-img">${product.emoji}</div>
+        <h1 class="product-detail-name">${product.name}</h1>
+        <div class="product-detail-category">${product.category}</div>
+        <div class="product-detail-price">${product.price.toLocaleString()} ₽</div>
+        <p class="product-detail-desc">${product.desc}</p>
+        <div class="product-detail-specs">
+          ${Object.entries(product.specs).map(([key, val]) => `
+            <div class="spec-row">
+              <span class="spec-key">${key}</span>
+              <span class="spec-val">${val}</span>
+            </div>
+          `).join('')}
+        </div>
+        <button class="btn-primary" onclick="addToCart(${product.id})">В корзину</button>
+      `;
+    }
+
+    function addToCart(id) {
+      let cart = getCart();
+      const product = PRODUCTS.find(p => p.id === id);
+      const existing = cart.find(item => item.product.id === id);
+
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ product, qty: 1 });
+      }
+      saveCart(cart);
+
+      // Простая анимация/сообщение
+      const btn = document.querySelector('.btn-primary');
+      const originalText = btn.textContent;
+      btn.textContent = 'Добавлено!';
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 1500);
+
+      updateCartBadge();
+    }
+
+    // Находим товар и рендерим
+    const product = PRODUCTS.find(p => p.id === productId);
+    renderProduct(product);
+    updateCartBadge();
+  </script>
+</body>
+</html>
