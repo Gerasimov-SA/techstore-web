@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Профиль — TechStore</title>
+  <!-- Иконка-заглушка, чтобы не было ошибки favicon.ico -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
   <style>
     :root {
       --primary: #2563eb;
@@ -219,43 +221,14 @@
           </div>
         </div>
 
-        <button class="btn-primary" type="button" onclick="alert('Функция в разработке')">Редактировать профиль</button>
-        <div class="logout-link" onclick="logout()">Выйти из аккаунта</div>
+        <button class="btn-primary" type="button" id="edit-profile-btn">Редактировать профиль</button>
+        <div class="logout-link" id="logout-link">Выйти из аккаунта</div>
       </div>
     </div>
   </main>
 
-  <!-- Относительный путь — обязательно без слэша в начале для GitHub Pages -->
+  <!-- Только внешние скрипты, никаких inline -->
   <script src="data.js"></script>
-  <script>
-    const cartBadge = document.getElementById('cart-badge');
-
-    function updateCartBadge() {
-      const cart = getCart();
-      const count = cart.reduce((sum, item) => sum + item.qty, 0);
-      cartBadge.textContent = count;
-    }
-
-    // Имитация статистики (можно заменить на реальные данные позже)
-    function renderStats() {
-      // Здесь можно хранить историю заказов в localStorage аналогично корзине
-      const ordersCount = 3;
-      const totalSpent = 42500;
-
-      document.getElementById('orders-count').textContent = ordersCount;
-      document.getElementById('total-spent').textContent = totalSpent.toLocaleString() + ' ₽';
-    }
-
-    function logout() {
-      if (confirm('Вы уверены, что хотите выйти?')) {
-        // В реальном проекте тут очистка токенов/сессии
-        alert('Вы вышли из аккаунта');
-        // Можно перенаправить: window.location.href = '/';
-      }
-    }
-
-    renderStats();
-    updateCartBadge();
-  </script>
+  <script src="profile.js"></script>
 </body>
 </html>
