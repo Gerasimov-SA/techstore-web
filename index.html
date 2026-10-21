@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TechStore — Каталог</title>
-  <!-- Подключаем стили (можно вынести в style.css) -->
   <style>
     :root { --primary: #2563eb; --primary-dark: #1d4ed8; --bg: #f1f5f9; --card-bg: #ffffff; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,66 +45,23 @@
   </header>
 
   <div class="filters">
-    <button class="filter-btn active" onclick="setFilter('all')">Все</button>
-    <button class="filter-btn" onclick="setFilter('laptops')">Ноутбуки</button>
-    <button class="filter-btn" onclick="setFilter('phones')">Смартфоны</button>
-    <button class="filter-btn" onclick="setFilter('tablets')">Планшеты</button>
-    <button class="filter-btn" onclick="setFilter('accessories')">Аксессуары</button>
+    <button class="filter-btn active">Все</button>
+    <button class="filter-btn">Ноутбуки</button>
+    <button class="filter-btn">Смартфоны</button>
+    <button class="filter-btn">Планшеты</button>
+    <button class="filter-btn">Аксессуары</button>
   </div>
 
   <div class="search-bar">
-    <input type="text" id="search-input" placeholder="Поиск по названию..." oninput="filterProducts()">
+    <input type="text" id="search-input" placeholder="Поиск по названию...">
   </div>
 
   <main>
     <div class="products" id="products-grid"></div>
   </main>
 
+  <!-- Только внешние скрипты, без inline-кода -->
   <script src="data.js"></script>
-  <script>
-    let activeFilter = 'all';
-    const productsGrid = document.getElementById('products-grid');
-    const cartBadge = document.getElementById('cart-badge');
-    const searchInput = document.getElementById('search-input');
-
-    function updateCartBadge() {
-      const cart = getCart();
-      const count = cart.reduce((sum, item) => sum + item.qty, 0);
-      cartBadge.textContent = count;
-    }
-
-    function renderProducts(products) {
-      productsGrid.innerHTML = products.map(product => `
-        <a href="/product.html?id=${product.id}" class="product-card">
-          <div class="product-img">${product.emoji}</div>
-          <div class="product-info">
-            <div class="product-name">${product.name}</div>
-            <div class="product-category">${product.category}</div>
-            <div class="product-price">${product.price.toLocaleString()} ₽</div>
-          </div>
-        </a>
-      `).join('');
-    }
-
-    function setFilter(category) {
-      activeFilter = category;
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      filterProducts();
-    }
-
-    function filterProducts() {
-      const query = searchInput.value.toLowerCase();
-      const filtered = PRODUCTS.filter(p =>
-        (activeFilter === 'all' || p.category === activeFilter) &&
-        (p.name.toLowerCase().includes(query) || p.category.includes(query))
-      );
-      renderProducts(filtered);
-    }
-
-    // Инициализация
-    renderProducts(PRODUCTS);
-    updateCartBadge();
-  </script>
+  <script src="catalog.js"></script>
 </body>
 </html>
