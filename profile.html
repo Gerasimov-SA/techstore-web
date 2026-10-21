@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Профиль — TechStore</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: var(--card-bg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .cart-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .cart-btn:hover { background: var(--primary-dark); }
+    .cart-badge {
+      background: var(--danger);
+      color: white;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .profile-container {
+      max-width: 600px;
+      margin: 1rem auto;
+      width: 100%;
+      padding: 0 1.25rem;
+    }
+    .profile-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 1rem;
+    }
+    .profile-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .profile-email {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--text);
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-key { color: var(--muted); font-size: 0.9rem; }
+    .info-value { font-weight: 500; font-size: 0.95rem; text-align: right; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .stat-box {
+      background: var(--bg);
+      padding: 0.8rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.9rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .logout-link {
+      margin-top: 1rem;
+      text-align: center;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-decoration: underline;
+    }
+    .logout-link:hover { color: #991b1b; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">TechStore</a>
+    <div class="header-actions">
+      <a href="/cart" class="cart-btn">
+        🛒 Корзина <span class="cart-badge" id="cart-badge">0</span>
+      </a>
+      <a href="/profile" class="cart-btn" style="background:transparent;color:var(--text)">Профиль</a>
+      <a href="/search" class="cart-btn" style="background:transparent;color:var(--text)">Поиск</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="profile-container">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar">👤</div>
+          <div class="profile-name">Алексей Иванов</div>
+          <div class="profile-email">alex@example.com</div>
+        </div>
+
+        <h3 class="section-title">Личные данные</h3>
+        <div class="info-row">
+          <span class="info-key">Телефон</span>
+          <span class="info-value">+7 (999) 123-45-67</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Город</span>
+          <span class="info-value">Санкт‑Петербург</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Дата регистрации</span>
+          <span class="info-value">12.03.2024</span>
+        </div>
+
+        <h3 class="section-title">Статистика</h3>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-number" id="orders-count">0</div>
+            <div class="stat-label">Заказов</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="total-spent">0 ₽</div>
+            <div class="stat-label">Потрачено</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" type="button" onclick="alert('Функция в разработке')">Редактировать профиль</button>
+        <div class="logout-link" onclick="logout()">Выйти из аккаунта</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Относительный путь — обязательно без слэша в начале для GitHub Pages -->
+  <script src="data.js"></script>
+  <script>
+    const cartBadge = document.getElementById('cart-badge');
+
+    function updateCartBadge() {
+      const cart = getCart();
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      cartBadge.textContent = count;
+    }
+
+    // Имитация статистики (можно заменить на реальные данные позже)
+    function renderStats() {
+      // Здесь можно хранить историю заказов в localStorage аналогично корзине
+      const ordersCount = 3;
+      const totalSpent = 42500;
+
+      document.getElementById('orders-count').textContent = ordersCount;
+      document.getElementById('total-spent').textContent = totalSpent.toLocaleString() + ' ₽';
+    }
+
+    function logout() {
+      if (confirm('Вы уверены, что хотите выйти?')) {
+        // В реальном проекте тут очистка токенов/сессии
+        alert('Вы вышли из аккаунта');
+        // Можно перенаправить: window.location.href = '/';
+      }
+    }
+
+    renderStats();
+    updateCartBadge();
+  </script>
+</body>
+</html>
