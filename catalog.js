@@ -16,7 +16,7 @@ function updateCartBadge() {
 function renderProducts(products) {
   if (!productsGrid) return;
   productsGrid.innerHTML = products.map(product => `
-    <a href="/product.html?id=${product.id}" class="product-card">
+    <a href="/techstore-web/product.html?id=${product.id}" class="product-card">
       <div class="product-img">${product.emoji}</div>
       <div class="product-info">
         <div class="product-name">${product.name}</div>
